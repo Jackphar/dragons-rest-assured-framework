@@ -1,6 +1,7 @@
 package tek.api.sqa.tests;
 
 import org.testng.Assert;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import io.restassured.RestAssured;
@@ -24,5 +25,18 @@ public class TokenVerifyTest extends APITestConfig{
 	}
 	
 	//HomeWork Add invalid token and validate response. 
+	
+	@Test 
+	public void verifyInvalidToken () {
+		
+		RequestSpecification request = RestAssured.given();
+		request.queryParam("token", "invalidToken");
+		request.queryParam("username", "supervisor");
+		Response response = request.when().get(EndPoints.TOKEN_VERIFY.getValue());
+		response.prettyPrint();
+		Assert.assertEquals(response.getStatusCode(), 400);
+		Assert.assertEquals(response.jsonPath().get("errorMessage"), "Token Expired or Invalid Token");
+	}
+
 	
 }

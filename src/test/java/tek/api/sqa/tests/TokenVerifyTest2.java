@@ -1,25 +1,27 @@
 package tek.api.sqa.tests;
 
+
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import tek.api.sqa.base.APITestConfig;
 import tek.api.utility.EndPoints;
 
-public class GetAllAccountTest extends APITestConfig {
+public class TokenVerifyTest2 extends APITestConfig {
 
 	@Test
-	public void getAllAccountTest() {
-		String token = getValidToken();
-
+	public void verifyValidToken() {
+		String validToken = getValidToken();
 		RequestSpecification request = RestAssured.given();
-		request.header("Authorization", "Bearer " + token);
-		Response response = request.when().get(EndPoints.GET_ALL_ACCOUNTS.getValue());
+		request.queryParam("token", validToken);
+		request.queryParam("username", "supervisor");
+		
+		Response response = request.when().get(EndPoints.TOKEN_VERIFY.getValue());
 		Assert.assertEquals(response.getStatusCode(), 200);
-		response.prettyPrint();
+		
+		
 
 	}
 
