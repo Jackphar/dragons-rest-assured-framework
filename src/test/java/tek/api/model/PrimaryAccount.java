@@ -97,6 +97,9 @@ public class PrimaryAccount {
 	public void setDateOfBirth(Date dateOfBirth) {
 		this.dateOfBirth = dateOfBirth;
 	}
+	public String setDateOfBirth(String DOB) {
+		return DOB;
+	}
 	public Object getUser() {
 		return user;
 	}

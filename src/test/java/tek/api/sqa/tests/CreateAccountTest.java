@@ -12,36 +12,37 @@ import tek.api.sqa.base.APITestConfig;
 import tek.api.utility.DataGenerator;
 import tek.api.utility.EndPoints;
 
-public class CreateAccountTest extends APITestConfig{
-	private DataGenerator data = new DataGenerator(); 
+public class CreateAccountTest extends APITestConfig {
+	
+	private DataGenerator data = new DataGenerator();
+
 	@Test
-	public void createAccountValidTest() {
-		String validToken = getValidToken(); 
-		RequestSpecification request = RestAssured.given(); 
+	public void createAccountTest() {
+		String token = getValidToken();
+		RequestSpecification request = RestAssured.given();
+		request.header("Authorization", "Bearer " + token);
 		request.contentType(ContentType.JSON);
-		request.header("Authorization" , "Bearer " + validToken);
-		//Create Request Body and Then Add to request. 
 		PrimaryAccount requestBody = new PrimaryAccount();
 		String firstName = data.getFirstName();
 		String lastName = data.getLastName();
 		requestBody.setEmail(data.getEmail(firstName, lastName, "company.com"));
 		requestBody.setFirstName(firstName);
 		requestBody.setLastName(lastName);
-		requestBody.setTitle("Mr.");
+		requestBody.setTitle(data.getJobTitle());
 		requestBody.setGender("MALE");
-		requestBody.setMaritalStatus("SINGLE");
-		requestBody.setEmploymentStatus(data.getJobTitle());
+		requestBody.setMaritalStatus("MARRIED");
+		requestBody.setEmploymentStatus("CEO");
 		requestBody.setDateOfBirth(data.getDateOfBirth());
-		
 		request.body(requestBody);
-		
-		Response response = request.when()
-				.post(EndPoints.ADD_PRIMARY_ACCOUNT.getValue());
+		Response response = request.when().post(EndPoints.ADD_PRIMARY_ACCOUNT.getValue());
 		response.prettyPrint();
 		Assert.assertEquals(response.getStatusCode(), 201);
 		PrimaryAccount responseBody = response.as(PrimaryAccount.class);
-		//String actualEmail = response.jsonPath().getString("email");
 		Assert.assertEquals(responseBody.getEmail(), requestBody.getEmail());
+		
+		
+		
+
 	}
 
 }
